@@ -1,0 +1,49 @@
+{
+  "name": "@rplan/couchbase",
+  "version": "0.0.1",
+  "author": "Actano GmbH (https://rplan.com/)",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "build": "babel --out-dir lib src",
+    "ci": "npm run lint && npm run test",
+    "clean": "npm run clean:lib && npm run clean:coverage",
+    "clean:lib": "rm -rf lib",
+    "clean:coverage": "rm -rf coverage .nyc_output coverage.lcov",
+    "coverage": "npm run clean:coverage; nyc --reporter=text npm run test",
+    "coverage:codecov": "npm run coverage && nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "coverage:html": "npm run clean:coverage; nyc --reporter=html npm run test; open coverage/index.html",
+    "lint": "eslint src test",
+    "prepublishOnly": "npm run clean && npm run ci && npm run build",
+    "test": "mocha test"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "codecov": "^3.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-actano-base": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0"
+  },
+  "dependencies": {
+    "@rplan/config": "^1.2.0",
+    "babel-register": "^6.26.0",
+    "couchbase": "^2.6.3"
+  }
+}
