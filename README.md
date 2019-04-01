@@ -27,12 +27,29 @@ This a simple couchbase wrapper that provides:
    
 # Usage
 
-```javascript 1.8
+```javascript
 import { bucket } from '@rplan/couchbase'
 
 async function foo() {
   await bucket().insert('foo', { bar: true })
   const foo = await bucket().get('foo') // { value: { bar: true } }
 }
+
+```   
+
+## Usage of test-helper
+
+```javascript
+import { bucket } from '@rplan/couchbase'
+import { useMockedCouchbaseInTests } from '@rplan/couchbase/lib/test-helper'
+
+describe('some test', () => {
+  useMockedCouchbaseInTests()
+  
+  it('should work', async () => {
+    await bucket().insert('a', { foo: 1 })
+    // ...
+  })
+})
 
 ```   
