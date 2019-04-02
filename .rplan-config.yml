@@ -1,6 +1,4 @@
 couchbase:
   host: localhost
   port: 8091
-  admin_username: user
-  admin_password: password
   bucket_name: default
