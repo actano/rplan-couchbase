@@ -26,7 +26,8 @@ This a simple couchbase wrapper that provides:
    the couchbase to a `couchbase.Mock` instance during runtime    
 - the following methods are just pass through, because there not async
    - `disconnect`
-   
+- custom errors `KeyNotFoundError` is thrown on error with code couchbase.errors.keyNotFound
+- custom errors `KeyAlreadyExistsError` is thrown on error with code couchbase.errors.keyAlreadyExists
    
 # Usage
 
