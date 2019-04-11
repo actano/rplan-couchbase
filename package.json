@@ -1,6 +1,6 @@
 {
   "name": "@rplan/couchbase",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Actano GmbH (https://rplan.com/)",
   "license": "MIT",
   "main": "lib/index.js",
