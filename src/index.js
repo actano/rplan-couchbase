@@ -1,6 +1,7 @@
 import couchbase from 'couchbase'
 import config from '@rplan/config'
 import { promisify } from 'util'
+import { KeyAlreadyExistsError, KeyNotFoundError } from './errors'
 
 const host = config.get('couchbase:host')
 const port = config.get('couchbase:port')
@@ -34,11 +35,11 @@ const isHealthy = _bucket => async () => {
 const find = _bucket => async (entityId) => {
   try {
     return await _bucket.get(entityId)
-  } catch (e) {
-    if (e.code === couchbase.errors.keyNotFound) {
+  } catch (err) {
+    if (err instanceof KeyNotFoundError) {
       return null
     }
-    throw e
+    throw err
   }
 }
 
@@ -52,7 +53,23 @@ function getCouchbaseBucket() {
   return cluster.openBucket(bucketName)
 }
 
-const promisifyBucketFn = (_bucket, fn) => promisify(_bucket[fn]).bind(_bucket)
+function transformErrors(fn) {
+  return async (...args) => {
+    try {
+      return await fn(...args)
+    } catch (err) {
+      if (err.code === couchbase.errors.keyNotFound) {
+        throw new KeyNotFoundError(err.message)
+      }
+      if (err.code === couchbase.errors.keyAlreadyExists) {
+        throw new KeyAlreadyExistsError(err.message)
+      }
+      throw err
+    }
+  }
+}
+
+const promisifyBucketFn = (_bucket, fn) => transformErrors(promisify(_bucket[fn]).bind(_bucket))
 const promisifyBucket = (_bucket) => {
   const promisifiedBucket = {
     upsert: promisifyBucketFn(_bucket, 'upsert'),
@@ -102,6 +119,7 @@ function useCouchbase() {
 }
 
 export {
+  KeyAlreadyExistsError, KeyNotFoundError,
   bucket,
   useCouchbase,
   useCouchbaseMock,

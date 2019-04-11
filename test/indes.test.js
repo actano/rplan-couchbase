@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import couchbase from 'couchbase'
 
-import { bucket } from '../src/index'
+import { bucket, KeyAlreadyExistsError, KeyNotFoundError } from '../src/index'
 import { useMockedCouchbaseInTests } from '../src/test-helper'
 
 describe('couchbase wrapper', () => {
@@ -76,5 +76,50 @@ describe('couchbase wrapper', () => {
 
     expect(result.a.value).to.deep.equal({ foo: 1 })
     expect(result.b.error.code).to.equal(couchbase.errors.keyNotFound)
+  })
+
+  it('should throw custom KeyNotFoundError on get, if key not exists', async () => {
+    try {
+      await bucket().get('a')
+    } catch (err) {
+      if (err instanceof KeyNotFoundError) {
+        return
+      }
+    }
+    expect(false, 'expected KeyNotFoundError not thrown').to.equal(true)
+  })
+
+  it('should throw custom KeyNotFoundError on replace, if key not exists', async () => {
+    try {
+      await bucket().replace('a', 'value')
+    } catch (err) {
+      if (err instanceof KeyNotFoundError) {
+        return
+      }
+    }
+    expect(false, 'expected KeyNotFoundError not thrown').to.equal(true)
+  })
+
+  it('should throw custom KeyNotFoundError on remove, if key not exists', async () => {
+    try {
+      await bucket().remove('a')
+    } catch (err) {
+      if (err instanceof KeyNotFoundError) {
+        return
+      }
+    }
+    expect(false, 'expected KeyNotFoundError not thrown').to.equal(true)
+  })
+
+  it('should throw custom KeyAlreadyExistsError if key exists', async () => {
+    await bucket().insert('a', 'value')
+    try {
+      await bucket().insert('a', 'value')
+    } catch (err) {
+      if (err instanceof KeyAlreadyExistsError) {
+        return
+      }
+    }
+    expect(false, 'expected KeyAlreadyExistsError not thrown').to.equal(true)
   })
 })
