@@ -15,7 +15,6 @@ This a simple couchbase wrapper that provides:
    - `remove`
    - `query`
    - `ping`
-   - `disconnect`
 - implements `find` that behaves like a `get`, 
    but returns null if key is not found 
 - implements `findMulti` that is a `getMulti`, 
@@ -23,6 +22,8 @@ This a simple couchbase wrapper that provides:
 - implements `isHealthy`, that pings the configured bucket
 - implements a mocha test-helper `useMockedCouchbaseInTests` that points
    the couchbase to a `couchbase.Mock` instance during runtime    
+- the following methods are just pass through, because there not async
+   - `disconnect`
    
    
 # Usage

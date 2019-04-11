@@ -62,7 +62,7 @@ const promisifyBucket = (_bucket) => {
     getMulti: promisifyBucketFn(_bucket, 'getMulti'),
     remove: promisifyBucketFn(_bucket, 'remove'),
     query: promisifyBucketFn(_bucket, 'query'),
-    disconnect: promisifyBucketFn(_bucket, 'disconnect'),
+    disconnect: _bucket.disconnect.bind(_bucket),
   }
 
   if (_bucket.ping) {
