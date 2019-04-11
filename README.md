@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/actano/rplan-couchbase.svg?branch=master)](https://travis-ci.org/actano/rplan-couchbase)
+
 @rplan/couchbase
 ================
 
